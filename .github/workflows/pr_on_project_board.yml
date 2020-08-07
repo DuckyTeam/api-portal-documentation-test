@@ -1,0 +1,18 @@
+name: Add PR to project board
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  create_card:
+    name: Create PR card in Github project
+    runs-on: ubuntu-latest
+    steps:
+      - name: add-new-prs-to-organization-based-project-column
+        uses: docker://takanabe/github-actions-automate-projects:v0.0.1
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == false
+        env:
+          GITHUB_TOKEN: ${{ secrets.TANGUY_PERSONAL_ACCESS_TOKEN_WRITE_ACCESS_TO_ORG_PROJECTS }}
+          GITHUB_PROJECT_URL: https://github.com/orgs/DuckyTeam/projects/1
+          GITHUB_PROJECT_COLUMN_NAME: Requires review
